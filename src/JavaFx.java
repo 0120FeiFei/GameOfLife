@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseMotionListener;
 
 public class JavaFx  {
     private JFrame frame;
@@ -12,7 +11,7 @@ public class JavaFx  {
 
     }
 
-    private void CreateFrame(String frameName){
+    private void CreateFrame(String DframeName){
         int n = 100; //初始化格子大小
         Cell[][] cellMatrix = new Cell[n][n];
         for(int i = 0 ; i < n ; i++){
@@ -28,7 +27,7 @@ public class JavaFx  {
         int heightScreen = screen.height;
         this.frame.setSize(widthScreen/2+100, heightScreen);
         this.frame.setLayout(null);
-        int panelWidth = widthScreen/2;
+        int panelWidth = widthScreen/2+100;
         int width=panelWidth/n;
         MyPanel panel = new MyPanel(width, cellMatrix);
         panel.setBounds(30,10, panelWidth, panelWidth);

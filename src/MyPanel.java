@@ -8,12 +8,12 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener,Cha
     private int cellDiameter;
     private Cell[][] cells;
     private JButton btn=new JButton();
-    private JSlider speed=new JSlider(0,500,200);
+    private JSlider speed=new JSlider(0,400,200);
     private GameOfLifeCore game = new GameOfLifeCore();
     private Timer timer;
     private boolean isInitialState =true;
-    private Dimension screen;
-    private int widthScreen;
+
+    private Color color = new Color(148,0,211);
 
     MyPanel(int _width, Cell[][] _cells){
         super();
@@ -22,33 +22,45 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener,Cha
         this.timer=new Timer(200,this);
 
         this.setLayout(null);
+        Dimension screen  = Toolkit.getDefaultToolkit().getScreenSize();
+        int widthScreen = screen.width;
 
-        this.btn.setBounds(495,50,100,50);
+        this.btn.setBounds(widthScreen /2-70,70,80,30);
         this.btn.setText("Start");
         this.btn.addActionListener(this);
+        JButton btnColor = new JButton("Color");
+        btnColor.setBounds(widthScreen /2-160,70,80,30);
+        btnColor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                color = JColorChooser.showDialog(null,"Select color", Color.PINK);
+                if(color == null){
+                    color = Color.RED;
+                }
+            }
+        });
 
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
 
-        screen = Toolkit.getDefaultToolkit().getScreenSize();
-        widthScreen= screen.width;
-        this.speed.setBounds(630,100,50, widthScreen /2);
+        this.speed.setBounds(0,10,widthScreen /2,50 );
         this.speed.setPaintTrack(true);
         this.speed.setMajorTickSpacing(20);
         this.speed.setMinorTickSpacing(5);
         this.speed.setPaintTicks(true);
         this.speed.setPaintLabels(true);
-        this.speed.setOrientation(SwingConstants.VERTICAL);
-        this.speed.setInverted(true);
+        this.speed.setOrientation(SwingConstants.HORIZONTAL);
+        this.speed.setInverted(false);
         this.speed.addChangeListener(this);
 
         String[] items={"None", "Random", "X", "Z"};
         JComboBox<String> selectInit = new JComboBox<>(items);
-        selectInit.setBounds(6,50,100,50);
+        selectInit.setBounds(8,70,80,30);
         selectInit.addItemListener(this);
 
 
         this.add(this.btn);
+        this.add(btnColor);
         this.add(this.speed);
         this.add(selectInit);
 
@@ -60,7 +72,7 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener,Cha
         for(int i=1;i<this.cells.length-1;i++){
             for(int j=1;j<this.cells[i].length-1;j++){
                 if(cells[i][j].getCurState())
-                    g.setColor(Color.GREEN);
+                    g.setColor(color);
                 else
                     g.setColor(Color.white);
                 g.fillOval(this.cellDiameter *i, this.cellDiameter *j+100, this.cellDiameter, this.cellDiameter);
@@ -148,7 +160,7 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener,Cha
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        timer.setDelay(500-this.speed.getValue());
+        timer.setDelay(400-this.speed.getValue());
     }
 
     @Override

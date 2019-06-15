@@ -4,7 +4,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 
-public class MyPanel extends JPanel implements ActionListener, MouseListener,ChangeListener, ItemListener {
+public class MyPanel extends JPanel implements ActionListener, MouseListener,ChangeListener, ItemListener,MouseMotionListener {
     private int cellDiameter;
     private Cell[][] cells;
     private JButton btn=new JButton();
@@ -12,6 +12,8 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener,Cha
     private GameOfLifeCore game = new GameOfLifeCore();
     private Timer timer;
     private boolean isInitialState =true;
+    private Dimension screen;
+    private int widthScreen;
 
     MyPanel(int _width, Cell[][] _cells){
         super();
@@ -21,13 +23,16 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener,Cha
 
         this.setLayout(null);
 
-        this.btn.setBounds(690,50,100,50);
+        this.btn.setBounds(495,50,100,50);
         this.btn.setText("Start");
         this.btn.addActionListener(this);
 
         this.addMouseListener(this);
+        this.addMouseMotionListener(this);
 
-        this.speed.setBounds(850,100,50,800);
+        screen = Toolkit.getDefaultToolkit().getScreenSize();
+        widthScreen= screen.width;
+        this.speed.setBounds(630,100,50, widthScreen /2);
         this.speed.setPaintTrack(true);
         this.speed.setMajorTickSpacing(20);
         this.speed.setMinorTickSpacing(5);
@@ -39,14 +44,15 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener,Cha
 
         String[] items={"None", "Random", "X", "Z"};
         JComboBox<String> selectInit = new JComboBox<>(items);
-        selectInit.setBounds(10,50,100,50);
+        selectInit.setBounds(6,50,100,50);
         selectInit.addItemListener(this);
 
 
         this.add(this.btn);
         this.add(this.speed);
         this.add(selectInit);
-}
+
+    }
 
     @Override
     public void paint(Graphics g) {
@@ -124,6 +130,23 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener,Cha
     }
 
     @Override
+    public void mouseMoved(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+       int x = e.getX();
+        int y = e.getY();
+        int i=x/this.cellDiameter;
+        int j=(y-100)/this.cellDiameter;
+        this.cells[i][j].setCurState(!this.cells[i][j].getCurState());
+        this.repaint();
+
+    }
+
+
+    @Override
     public void stateChanged(ChangeEvent e) {
         timer.setDelay(500-this.speed.getValue());
     }
@@ -149,4 +172,5 @@ public class MyPanel extends JPanel implements ActionListener, MouseListener,Cha
             }
         }
     }
+
 }

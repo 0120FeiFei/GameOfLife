@@ -1,4 +1,6 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseMotionListener;
 
 public class JavaFx  {
     private JFrame frame;
@@ -11,7 +13,7 @@ public class JavaFx  {
     }
 
     private void CreateFrame(String frameName){
-        int n = 200; //初始化格子大小
+        int n = 100; //初始化格子大小
         Cell[][] cellMatrix = new Cell[n][n];
         for(int i = 0 ; i < n ; i++){
             for(int j = 0 ; j < n ; j++){
@@ -21,10 +23,13 @@ public class JavaFx  {
         GameOfLifeCore game = new GameOfLifeCore();
         game.clear(cellMatrix);
         this.frame=new JFrame("GameOfLive");
-        this.frame.setSize(1000,1000);
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        int widthScreen = screen.width;
+        int heightScreen = screen.height;
+        this.frame.setSize(widthScreen/2+100, heightScreen);
         this.frame.setLayout(null);
-        int panelWidth = 1000;
-        int width=(panelWidth -200)/n;
+        int panelWidth = widthScreen/2;
+        int width=panelWidth/n;
         MyPanel panel = new MyPanel(width, cellMatrix);
         panel.setBounds(30,10, panelWidth, panelWidth);
 
